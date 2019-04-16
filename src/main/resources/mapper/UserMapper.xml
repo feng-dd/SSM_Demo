@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserDao">
+    <resultMap id="User" type="com.feng.mybatis.pojo.User">
+        <id column="id" jdbcType="SMALLINT" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="SMALLINT" property="age"/>
+        <result column="sex" jdbcType="CHAR" property="age"/>
+        <result column="birthday" jdbcType="VARCHAR" property="birthday"/>
+        <result column="cr_tm" jdbcType="VARCHAR" property="crtm"/>
+        <result column="up_tm" jdbcType="VARCHAR" property="uptm"/>
+    </resultMap>
+    <!-- sql可以抽取到另外的xml CommonSql.xml
+    <sql id="cols">
+         id,username,password,name,age,birthday,sex,cr_tm,up_tm
+    </sql>
+
+    <sql id="colsNotPk">
+         username,password,name,age,birthday,sex,cr_tm,up_tm
+    </sql>
+    -->
+    <select id="queryUserById" resultMap="User" parameterType="int">
+       select
+       <include refid="CommonSQL.cols"/>
+       from
+       tb_user
+       where id = #{id};
+   </select>
+
+    <select id="queryUserAll" resultType="com.feng.mybatis.pojo.User">
+        select
+        <include refid="CommonSQL.cols"/>
+        from tb_user;
+    </select>
+
+    <!--插入数据-->
+    <insert id="insertUser" parameterType="com.feng.mybatis.pojo.User">
+        INSERT INTO tb_user (
+        <include refid="CommonSQL.colsNotPk"/>
+        )
+        VALUES
+        (
+        #{username},
+        #{password},
+        #{name},
+        #{age},
+        #{birthday},
+        #{sex},
+        #{crtm},
+        #{uptm}
+        );
+    </insert>
+
+    <update id="updateUser" parameterType="com.feng.mybatis.pojo.User">
+        UPDATE tb_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="username!=null">username = #{username},</if>
+            <if test="password!=null">password =  #{password},</if>
+            <if test="name!=null">name = #{name},</if>
+            <if test="age!=null">age = #{age},</if>
+            <if test="sex!=null">sex = #{sex},</if>
+            <if test="birthday!=null">birthday = #{birthday},</if>
+            <if test="crtm!=null">cr_tm = #{crtm},</if>
+            <if test="uptm!=null">up_tm = #{uptm},</if>
+        </trim>
+        WHERE
+        (id = #{id})
+    </update>
+
+    <delete id="deleteUser">
+        delete from tb_user where id=#{id}
+    </delete>
+</mapper>
+
