@@ -1,7 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd "
+>
 
-    <bean id="userDao" class="com.feng.spring.UserService" />
+<!-- IOC:控制反转,将创建类的权力交由Spring控制
+    Spring创建对象的三种方式：
+    1.普通类型:默认无参构造创建实例对象
+    <bean id="userDao" class="com.feng.spring.service.UserDao" />
+    2.静态工厂：通过工厂类,调用创建实例的静态方法
+    <bean id="userFactory" class="com.feng.spring.factory.userFactory" factory-method="getUser"/>
+    3.实例工厂：需要先创建工厂实例,再由工厂创建实例对象
+    <bean id="userFactory2" class="com.feng.spring.factory.userFactory2" />
+    <bean id="userDao" class="com.feng.spring.service.UserDao" factory-bean="userFactory2"  factory-method="getUser" />
+-->
+    <bean id="userDao" class="com.feng.spring.dao.impl.UserDaoImpl" />
+
+<!-- DI:依赖注入,在创建对象时,将对象的一些属性注入
+    Spring 注入的三种方式：
+    1.构造器注入:index 参数下标    type 参数类型   value 参数值
+    <bean id="userService" class="com.feng.spring.service.UserService">
+        <constructor-arg index="0" type="java.lang.String" value="123"/>
+    <bean>
+    2.setter方法注入: ref 就是 setter 注入的对象的 bean.id
+    <bean id="userDao" class="com.feng.spring.dao.impl.UserDaoImpl" />
+    <bean id="userService" class="com.feng.spring.service.UserService">
+        <property name="userDao" ref="userDao"/>
+        当注入的是 List 类型的属性
+        <property name="pList">
+            <list>
+                <value>123</value>
+                <value>456</value>
+            </list>
+        </property>
+        当注入的是 Set 类型的属性
+        <property name="pSet">
+            <set>
+                <value>123</value>
+                <value>456</value>
+            </set>
+        </property>
+        当注入的是 Map 类型的属性
+        <property name="pMap">
+            <map>
+                <entry key="data1" value="1"/>
+                <entry>
+                    <key>
+                        <value>data2</value>
+                    </key>
+                    <value>2</value>
+                </entry>
+            </map>
+        </property>
+        当注入的是数组类型的数据
+        <property name="pArray">
+            <array>
+                <value>123</value>
+                <value>456</value>
+            </array>
+        </property>
+        当注入的是 propertyis 类型的数据  {a=y,q=r}
+        <property name="pArray">
+            <props>
+                <prop key="a">y</prop>
+                <prop key="q">r</prop>
+            </props>
+        </property>
+    </bean>
+    3.基于注解
+-->
+    <bean id="userService" class="com.feng.spring.service.UserService">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+<!--  扫描包下面含有注解的类 -->
+    <context:component-scan base-package="com.feng.spring"/>
 </beans>
