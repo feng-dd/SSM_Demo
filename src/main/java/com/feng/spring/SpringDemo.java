@@ -1,5 +1,6 @@
 package com.feng.spring;
 
+import com.feng.spring.pojo.User;
 import com.feng.spring.service.UserService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -17,5 +18,9 @@ public class SpringDemo {
     //UserService userService = (UserService) ac.getBean("userServcie");
     UserService userService = ac.getBean("userService",UserService.class);
     userService.addUser();
+    User user = (User) ac.getBean("user");
+    User user1 = (User) ac.getBean("user");
+    System.out.println(user);
+    System.out.println(user1);
   }
 }

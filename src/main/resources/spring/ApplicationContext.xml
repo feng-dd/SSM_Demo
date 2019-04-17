@@ -6,7 +6,9 @@
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd "
+default-lazy-init="true"
 >
+<!-- default-lazy-init="true" 设置整个spring上下文为懒加载 -->
 
 <!-- IOC:控制反转,将创建类的权力交由Spring控制
     Spring创建对象的三种方式：
@@ -76,6 +78,25 @@
     <bean id="userService" class="com.feng.spring.service.UserService">
         <property name="userDao" ref="userDao"/>
     </bean>
-<!--  扫描包下面含有注解的类 -->
+<!-- 扫描包下面含有注解的类 -->
     <context:component-scan base-package="com.feng.spring"/>
+<!-- 作用域 singleton|prototype 单例(默认)|多例 在同一个spring容器中存在一个|多个 Bean实例
+lazy-init:当前bean是否开启懒加载,Bean只有在其被需要的时候才会被初始化;只适用于 singleton 作用域
+-->
+    <bean id="user" class="com.feng.spring.pojo.User" scope="singleton" lazy-init="true"/>
+<!-- 作用域 request|session|application    一次请求(默认)|一次会话|web容器 -->
+    <bean id="requestController" class="com.feng.spring.controller.RequestController"/>
+    <bean id="sessionController" class="com.feng.spring.controller.SessionController"/>
+    <bean id="applicationController" class="com.feng.spring.controller.ApplicationController"/>
+<!-- 自定义作用域 -->
+    <bean id="myScope" class="com.feng.spring.commons.MyScope"/>
+    <bean class="org.springframework.context.support.SimpleThreadScope" id="simpleThreadScope"/>
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="mySocpe" value-ref="myScope"/>
+                <entry key="simpleThreadScope" value-ref="simpleThreadScope"/>
+            </map>
+        </property>
+    </bean>
 </beans>
